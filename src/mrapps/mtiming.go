@@ -14,14 +14,13 @@ import "os"
 import "syscall"
 import "time"
 import "sort"
-import "io/ioutil"
 
 func nparallel(phase string) int {
 	// create a file so that other workers will see that
 	// we're running at the same time as them.
 	pid := os.Getpid()
 	myfilename := fmt.Sprintf("mr-worker-%s-%d", phase, pid)
-	err := ioutil.WriteFile(myfilename, []byte("x"), 0666)
+	err := os.WriteFile(myfilename, []byte("x"), 0666)
 	if err != nil {
 		panic(err)
 	}
@@ -70,11 +69,11 @@ func Map(filename string, contents string) []mr.KeyValue {
 
 	kva := []mr.KeyValue{}
 	kva = append(kva, mr.KeyValue{
-		fmt.Sprintf("times-%v", pid),
-		fmt.Sprintf("%.1f", ts)})
+		Key:   fmt.Sprintf("times-%v", pid),
+		Value: fmt.Sprintf("%.1f", ts)})
 	kva = append(kva, mr.KeyValue{
-		fmt.Sprintf("parallel-%v", pid),
-		fmt.Sprintf("%d", n)})
+		Key:   fmt.Sprintf("parallel-%v", pid),
+		Value: fmt.Sprintf("%d", n)})
 	return kva
 }
 

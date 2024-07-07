@@ -3,7 +3,7 @@ package main
 //
 // a word-count application "plugin" for MapReduce.
 //
-// go build -buildmode=plugin wc.go
+// go build -gcflags='all=-N -l' -buildmode=plugin ../mrapps/wc.go
 //
 
 import "6.5840/mr"
@@ -25,7 +25,7 @@ func Map(filename string, contents string) []mr.KeyValue {
 
 	kva := []mr.KeyValue{}
 	for _, w := range words {
-		kv := mr.KeyValue{w, "1"}
+		kv := mr.KeyValue{Key: w, Value: "1"}
 		kva = append(kva, kv)
 	}
 	return kva
